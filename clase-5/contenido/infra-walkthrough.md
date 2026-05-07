@@ -1,6 +1,6 @@
 # Walkthrough de infraestructura · `yana-killa-demo`
 
-> Guía de la **primera parte de Clase 5** (35 min). Pensada para que el instructor entienda **el porqué** de cada decisión antes de proyectar el código. En clase: lees esta guía con los asistentes, y solo después abres los archivos del repo del demo.
+> Guía conceptual del proyecto de referencia de Clase 5. Explica **el porqué** de cada decisión antes de mirar el código. Léela primero, y después abre los archivos del repo del demo.
 
 ---
 
@@ -8,7 +8,7 @@
 
 > *"La app del demo funciona en mi laptop. ¿Qué hace falta para que la use un usuario real, en internet, todos los días?"*
 
-Esa diferencia se compone de seis preocupaciones — y cada una se resuelve con una decisión de infra concreta. Al final del bloque, los asistentes deberían poder mirar cualquier app LLM y reconocer **dónde** vive cada preocupación.
+Esa diferencia se compone de seis preocupaciones — y cada una se resuelve con una decisión de infra concreta. Al final de esta guía deberías poder mirar cualquier app LLM y reconocer **dónde** vive cada preocupación.
 
 | # | Preocupación | Pregunta concreta | Dónde se resuelve en `yana-killa-demo` |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Esa diferencia se compone de seis preocupaciones — y cada una se resuelve con 
 | 5 | **Empaque** | Cómo se distribuyen los servicios y dependencias | Docker + docker-compose (api, web, nginx) |
 | 6 | **Despliegue** | Cómo pasan los cambios de mi laptop al servidor | `rsync` por SSH + `docker compose up -d` |
 
-Lo que **no** se resuelve aquí (y vale la pena nombrarlo explícitamente): observabilidad LLM, evaluación, guardrails, multi-instancia, autoescalado. El bloque 2 de la clase ataca esas brechas.
+Lo que **no** se resuelve aquí (y vale la pena nombrarlo explícitamente): observabilidad LLM, evaluación, guardrails, multi-instancia, autoescalado. La sección §9 de esta guía mapea esas brechas.
 
 ---
 
@@ -95,7 +95,7 @@ EC2_INSTANCE_TYPE="t3.medium"   # 2 vCPU · 4 GB RAM
 | ARM `t4g`: ~20% más barato pero faltaba imagen `tesseract-ocr-spa` lista | `t4g.medium` | dependencias OCR en ARM eran fricción extra |
 | Lambda / Fargate | — | Cold start + límite de memoria + sin estado local hacen el patrón inviable para RAG con índice SQLite local |
 
-**Mensaje de clase**: la elección de cómputo se hace al revés — "qué necesita mi proceso más pesado" (BGE-M3 cargado en RAM, persistente) y desde ahí eliges el menor tier que lo soporte. No empieces por el tier; empieza por el perfil del proceso.
+**Idea clave**: la elección de cómputo se hace al revés — "qué necesita mi proceso más pesado" (BGE-M3 cargado en RAM, persistente) y desde ahí eliges el menor tier que lo soporte. No empieces por el tier; empieza por el perfil del proceso.
 
 ### 4.2 Estado: EBS gp3 30 GB
 
@@ -113,7 +113,7 @@ VolumeType=gp3
 | Sin **RDS / Postgres** | El estado total cabe en SQLite; añadir RDS son ~30 USD/mes y otra superficie operativa. Si crece, migras. |
 | Sin **S3** | El frontend se sirve desde Node SSR (TanStack Start), no es un static bundle. PDFs se montan como volumen read-only. |
 
-**Mensaje de clase**: para una app LLM con RAG, el "estado" suele ser el índice vectorial. Ese índice es el activo más caro de regenerar (horas de embedding). Tratarlo como dato persistente — no como cache — es el reflejo correcto.
+**Idea clave**: para una app LLM con RAG, el "estado" suele ser el índice vectorial. Ese índice es el activo más caro de regenerar (horas de embedding). Tratarlo como dato persistente — no como cache — es el reflejo correcto.
 
 ### 4.3 Red: Security Group restringido a Cloudflare
 
@@ -131,7 +131,7 @@ CF_IPS_RAW=$(curl -fsS https://www.cloudflare.com/ips-v4)
 | Sin **ALB / NLB** | El balanceador no aporta nada con un solo backend; añade ~16 USD/mes y otro punto de configuración. |
 | Sin **EIP** (IP elástica) | Cloudflare proxied → la IP pública no se publica nunca. Si la EC2 se reinicia y cambia IP, actualizas el A record. Te ahorras 3.6 USD/mes y una capa. |
 
-**Mensaje de clase**: defense-in-depth no significa "más capas que pueda pagar". Significa "que si una capa falla, otra contiene el daño". Cerrar 80/443 al mundo y dejarlos abiertos solo a Cloudflare es la versión barata de WAF.
+**Idea clave**: defense-in-depth no significa "más capas que pueda pagar". Significa "que si una capa falla, otra contiene el daño". Cerrar 80/443 al mundo y dejarlos abiertos solo a Cloudflare es la versión barata de WAF.
 
 ### 4.4 Sistema operativo: Amazon Linux 2023
 
@@ -178,7 +178,7 @@ chown -R ec2-user:ec2-user /opt/yanakilla
 | `usermod -aG docker ec2-user` | Permite ejecutar `docker compose` sin `sudo` desde la sesión SSH del usuario por defecto. |
 | `/opt/yanakilla` con `chown ec2-user` | Carpeta de la app. Está separada de `/home/ec2-user` para que el deploy pueda hacerse aunque el home esté lleno o pertenezca a otro user. |
 
-**Mensaje de clase**: un buen `user-data` deja la máquina lista para recibir el primer deploy sin intervención manual. Si tienes que entrar por SSH a "ajustar algo después de crearla", todavía no terminaste el script.
+**Idea clave**: un buen `user-data` deja la máquina lista para recibir el primer deploy sin intervención manual. Si tienes que entrar por SSH a "ajustar algo después de crearla", todavía no terminaste el script.
 
 ### 4.6 Lo que NO se aprovisiona
 
@@ -388,7 +388,7 @@ server {
 | `location /api/` antes que `location /` | nginx escoge el más específico que matchea. `/api/...` va al backend; todo lo demás al frontend SSR. |
 | `proxy_set_header X-Forwarded-*` | Cuando una IP llega filtrada por Cloudflare y luego nginx, perdemos la IP del cliente real si no la propagamos. Estos headers la preservan. |
 
-**Mensaje de clase**: si tu app LLM usa SSE o streaming HTTP, `proxy_buffering off` y un `read_timeout` generoso son **obligatorios** en cualquier proxy delante. Es la causa #1 de "el streaming funciona en local pero no en producción".
+**Idea clave**: si tu app LLM usa SSE o streaming HTTP, `proxy_buffering off` y un `read_timeout` generoso son **obligatorios** en cualquier proxy delante. Es la causa #1 de "el streaming funciona en local pero no en producción".
 
 ---
 
@@ -436,7 +436,7 @@ Archivo guía: `infra/deploy.sh`. La idea es que un deploy completo cabe en un s
 | HashiCorp Vault | dynamic secrets, auditoría completa | enterprise |
 | SOPS + git encrypted | secrets versionados con el código | razonable, no implementado |
 
-**Mensaje de clase**: la "mejor" gestión de secretos es la que tu equipo realmente va a usar. Vault sin un humano que lo cuide es peor que un `.env` con permisos correctos.
+**Idea clave**: la "mejor" gestión de secretos es la que tu equipo realmente va a usar. Vault sin un humano que lo cuide es peor que un `.env` con permisos correctos.
 
 ---
 
@@ -459,7 +459,7 @@ Lo que **NO** hay (y es la diferencia entre piloto y producto):
 | Tracing distribuido | "qué hizo este request específico, paso a paso" | OpenTelemetry + Tempo/Jaeger |
 | Métricas Prometheus / dashboards | "tendencia de latencia, error rate, p95" | Prometheus + Grafana |
 | Alertas | "avísame si /health cae 3 veces seguidas" | Cloudflare alerts, UptimeRobot |
-| Eval continua | "¿la calidad de las respuestas se degradó tras el cambio de prompt?" | Golden set + LLM-as-judge (bloque 4 de la clase) |
+| Eval continua | "¿la calidad de las respuestas se degradó tras el cambio de prompt?" | Frameworks de eval LLM (deepeval, ragas, promptfoo) |
 
 **Trampa frecuente**: "tengo `/health` y veo CPU en CloudWatch, estoy observando". No. Eso te dice que la máquina respira; no te dice que tu LLM está respondiendo bien o cuánto cuesta. La observabilidad LLM es una capa propia — y es lo primero que se añade cuando un piloto pasa a producto.
 
@@ -467,7 +467,7 @@ Lo que **NO** hay (y es la diferencia entre piloto y producto):
 
 ## 10 · Modos de fallo: integración con la infra
 
-Recap (visto en clase 4) y cómo se monta sobre esta infra:
+Recap de clase 4 y cómo se monta sobre esta infra:
 
 | Plan | Qué falla | Qué sigue funcionando | Dónde lo soporta la infra |
 |---|---|---|---|
@@ -475,7 +475,7 @@ Recap (visto en clase 4) y cómo se monta sobre esta infra:
 | **B** | Sin internet o LLM externo caído | Chat con LLM local Ollama | Bastaría `LLM_MODEL=ollama/...` en `.env` y un contenedor extra Ollama (no incluido por defecto: requiere modelo descargado) |
 | **C** | LLM completamente caído | Búsqueda híbrida BM25+vector con citas (`/buscar`) | Ya en la infra: el index SQLite + sqlite-vec funcionan sin LLM |
 
-**Mensaje de clase**: una buena app LLM **degrada** en lugar de **caerse**. Eso es una decisión arquitectónica que se toma temprano (cuando todavía hay tiempo de poner un fallback en cada capa). Tarde es costoso.
+**Idea clave**: una buena app LLM **degrada** en lugar de **caerse**. Eso es una decisión arquitectónica que se toma temprano (cuando todavía hay tiempo de poner un fallback en cada capa). Tarde es costoso.
 
 ---
 
@@ -493,11 +493,11 @@ Recap (visto en clase 4) y cómo se monta sobre esta infra:
 
 Tener un teardown es tan importante como el setup. Un script que solo crea infra es media solución: te deja sin forma sistemática de limpiar el entorno (y eso significa cuentas de AWS llenas de recursos huérfanos).
 
-**Mensaje de clase**: cuando demuestres infra-as-code, muestra siempre el ciclo completo `setup → deploy → teardown`. Es lo que separa un *script de creación* de una *infraestructura operada*.
+**Idea clave**: cuando demuestres infra-as-code, muestra siempre el ciclo completo `setup → deploy → teardown`. Es lo que separa un *script de creación* de una *infraestructura operada*.
 
 ---
 
-## 12 · Tabla maestra de decisiones (referencia rápida en clase)
+## 12 · Tabla maestra de decisiones
 
 | Decisión | Elegimos | Descartamos | Por qué |
 |---|---|---|---|
@@ -514,24 +514,24 @@ Tener un teardown es tan importante como el setup. Un script que solo crea infra
 | OS | Amazon Linux 2023 | Ubuntu / Debian | mantenida + AWS-native |
 | Bootstrap | `user-data` | imagen pre-buildeada | AMI estándar + script reproducible |
 | Swap | 4 GB | sin swap | mitiga OOM en build / BGE-M3 |
-| Observabilidad | `/health` + `latency_ms` | OTel / Langfuse | brecha consciente — siguiente bloque |
+| Observabilidad | `/health` + `latency_ms` | OTel / Langfuse | brecha consciente — ver §9 |
 
 ---
 
-## 13 · Recorrido sugerido en clase (35 min)
+## 13 · Orden de lectura sugerido
 
-Orden propuesto al proyectar el repo. La idea es que para cuando se abra cada archivo, el "porqué" ya esté en la cabeza de los asistentes — gracias a esta guía.
+Cuando vayas al repo del demo, este es el orden que más rinde: el "porqué" de cada archivo ya está en esta guía, así que abrirlos en este orden hace que cada decisión caiga en su sitio.
 
-| # | Min | Archivo | Lo que se subraya |
-|---|---|---|---|
-| 1 | 3 | esta guía §1-2 | la pregunta arquitectónica + stack en una imagen |
-| 2 | 4 | `infra/config.env.example` | qué se parametriza (región, VPC, FQDN), qué no |
-| 3 | 7 | `infra/setup-prod.sh` | recorrido top-down: SG, key, EC2 + user-data, gp3 |
-| 4 | 4 | `api/Dockerfile` y `web/Dockerfile` | base mínima + multi-stage + `tesseract-ocr-spa` |
-| 5 | 4 | `infra/docker-compose.prod.yml` | redes privadas, volúmenes, `restart` |
-| 6 | 5 | `infra/nginx.conf` | `proxy_buffering off`, `read_timeout 3600s`, redirección 80→443 |
-| 7 | 4 | `infra/deploy.sh` | rsync + chown defensivo + healthcheck final |
-| 8 | 2 | `infra/teardown-prod.sh` | el ciclo completo, EBS sobrevive |
-| 9 | 2 | esta guía §9 | brechas de observabilidad → puente al bloque 3 (eval) |
+| # | Archivo | Lo que se subraya |
+|---|---|---|
+| 1 | esta guía §1-2 | la pregunta arquitectónica + stack en una imagen |
+| 2 | `infra/config.env.example` | qué se parametriza (región, VPC, FQDN), qué no |
+| 3 | `infra/setup-prod.sh` | recorrido top-down: SG, key, EC2 + user-data, gp3 |
+| 4 | `api/Dockerfile` y `web/Dockerfile` | base mínima + multi-stage + `tesseract-ocr-spa` |
+| 5 | `infra/docker-compose.prod.yml` | redes privadas, volúmenes, `restart` |
+| 6 | `infra/nginx.conf` | `proxy_buffering off`, `read_timeout 3600s`, redirección 80→443 |
+| 7 | `infra/deploy.sh` | rsync + chown defensivo + healthcheck final |
+| 8 | `infra/teardown-prod.sh` | el ciclo completo, EBS sobrevive |
+| 9 | esta guía §9 | brechas de observabilidad |
 
-**Total: 35 min.** Si te quedas corto: salta `teardown` y la sección de Cloudflare en detalle. Si te sobra: abre `Makefile` y muestra los targets `seed` y `reset` (cómo se prepara el dato antes de un deploy).
+Para profundizar después: el `Makefile` del demo expone los targets `seed` y `reset` que muestran cómo se prepara el dato (índice precomputado) antes de un deploy.

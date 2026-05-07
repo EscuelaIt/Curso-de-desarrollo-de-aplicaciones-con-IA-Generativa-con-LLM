@@ -1,13 +1,13 @@
 # Clase 2 — Prompt Engineering como sistema
 
 > Clase 2 (de 5) del curso *Arquitectura de Aplicaciones con IA Generativa* — EscuelaIT.
-> Duración: 90 min. Nivel: desarrolladores intermedio-avanzados.
+> Nivel: desarrolladores intermedio-avanzados.
 
 ---
 
-## Objetivo
+## Qué vas a aprender
 
-Al terminar la sesión, el asistente debe ser capaz de:
+Al terminar esta clase deberías ser capaz de:
 
 1. Distinguir zero-shot, few-shot, chain-of-thought y self-consistency, y saber cuándo usar cada una.
 2. Diseñar un system prompt con estructura (rol, contexto, restricciones, formato) y defender por qué cada bloque reduce errores.
@@ -16,18 +16,17 @@ Al terminar la sesión, el asistente debe ser capaz de:
 
 ---
 
-## Estructura (90 min)
+## Contenidos
 
-| # | Bloque | Min | Contenido | Dónde |
-|---|---|---|---|---|
-| 0 | **Cierre clase 1 + demo gancho** | 15 | Diapos 20–35 del pptx de clase 1 (modo rápido). Cierra bloques 3–5 y presenta la agenda de hoy con slide 35. | `clase-1/Presentation1.pptx` |
-| 1 | **Setup + anatomía rápida** | 5 | `.env`, cliente DeepSeek, test de conexión, roles y temperature. | `notebook/prompting.ipynb` §0–1 |
-| 2 | **Técnicas de prompting** | 20 | Zero-shot, few-shot, CoT, self-consistency con ejemplos electorales. | Notebook §2 |
-| 3 | **System prompts como arquitectura** | 10 | Rol · contexto · restricciones · formato. Antes/después. | Notebook §3 |
-| 4 | **Output estructurado** | 15 | JSON mode, Pydantic + Instructor, validación con retry, truncamiento. | Notebook §4 |
-| 5 | **Pipeline multi-etapa** | 15 | Extracción → clasificación → informe. Cada etapa es un LLM call tipado. | Notebook §5 |
-| 6 | **Puente al código Go de `peru-elecciones`** | 8 | Mapear los patrones del notebook al código real: cliente agnóstico, template de prompt, inyección de contexto SQLite. | `/Users/manduinca/Projects/deepskill/peru-elecciones` |
-| 7 | **Cierre + preview clase 3** | 2 | 3 take-aways + transición a RAG y orquestación. | — |
+| # | Bloque | Material |
+|---|---|---|
+| 1 | **Setup + anatomía rápida** — `.env`, cliente DeepSeek, test de conexión, roles y temperature. | `notebook/prompting.ipynb` §0–1 |
+| 2 | **Técnicas de prompting** — zero-shot, few-shot, CoT, self-consistency con ejemplos electorales. | `notebook/prompting.ipynb` §2 |
+| 3 | **System prompts como arquitectura** — rol · contexto · restricciones · formato. Antes/después. | `notebook/prompting.ipynb` §3 |
+| 4 | **Output estructurado** — JSON mode, Pydantic + Instructor, validación con retry, truncamiento. | `notebook/prompting.ipynb` §4 |
+| 5 | **Pipeline multi-etapa** — extracción → clasificación → informe. Cada etapa es un LLM call tipado. | `notebook/prompting.ipynb` §5 |
+| 6 | **Puente al código Go de `peru-elecciones`** — mapeo de los patrones del notebook al código real: cliente agnóstico, template de prompt, inyección de contexto SQLite. | proyecto `peru-elecciones` |
+| 7 | **Cierre + preview clase 3** — take-aways y transición a RAG y orquestación. | — |
 
 ---
 

@@ -180,7 +180,7 @@ El ecosistema LLM ya no es "OpenAI vs. el resto". A abril de 2026 conviven seis 
 
 ## 3. Comparativa de pricing (abril 2026) — tier por tier
 
-> **Recomendación para clase**: abrir en vivo [artificialanalysis.ai/models](https://artificialanalysis.ai/models) y filtrar por "Intelligence Index" vs "Price". Se actualiza semanalmente.
+> **Tip**: para datos actualizados, abre [artificialanalysis.ai/models](https://artificialanalysis.ai/models) y filtra por "Intelligence Index" vs "Price". Se actualiza semanalmente.
 
 ### 3.1 Tier "barato / alta velocidad" (chatbots, clasificación, extracción ligera)
 

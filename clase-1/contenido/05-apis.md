@@ -752,7 +752,7 @@ Para conversaciones **voz-a-voz** con latencia sub-segundo (~300-500 ms), los *c
 - **Gemini Live API**: WebSocket con audio/video streaming nativo; modelos `gemini-2.0-flash-live`, `gemini-live-2.5-flash`.
 - **Anthropic**: a abril 2026 no tiene una Realtime voice API propia; el patrón es STT (Whisper/Deepgram) → Claude → TTS (ElevenLabs/OpenAI TTS).
 
-Para el curso: mencionar que existen y cuándo conviene — **no** son chat completions y requieren arquitectura diferente (WebSocket server, buffering, gestión de interrupciones). Profundizaremos en clase 4.
+Lo importante: estas APIs existen y son la opción correcta para voz-a-voz, pero **no** son chat completions y requieren arquitectura diferente (WebSocket server, buffering, gestión de interrupciones). Para una app conversacional típica con UI textual, sigue siendo `chat/completions` con SSE.
 
 ---
 

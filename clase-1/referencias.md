@@ -132,8 +132,9 @@
 
 ## 8. Proyectos de referencia del curso
 
-- **educa-AI-Platforms (interno)** — `/Users/manduinca/Projects/deepskill/educa-AI-Platforms` — Plataforma EdTech con orquestación LLM, chat multi-turn, streaming SSE, exports y rate limiting. Fuente de ejemplos prácticos para clases 3-5.
-- **peru-elecciones (interno)** — `/Users/manduinca/Projects/deepskill/peru-elecciones` — Go + DeepSeek vía API compatible-OpenAI, contexto inyectado desde SQLite sin RAG. Caso "minimal viable LLM app" que ilustra que no todo problema requiere vector DB.
+- **educa-AI-Platforms** (proyecto interno) — Plataforma EdTech con orquestación LLM, chat multi-turn, streaming SSE, exports y rate limiting. Fuente de ejemplos prácticos para las clases 3-5.
+- **peru-elecciones** (proyecto interno) — Go + DeepSeek vía API compatible-OpenAI, contexto inyectado desde SQLite sin RAG. Caso "minimal viable LLM app" que ilustra que no todo problema requiere vector DB.
+- **yana-killa-demo** (proyecto interno) — FastAPI + TanStack Start, RAG híbrido BM25+vector, LiteLLM, SSE, citas verificables. Caso de estudio principal de Clase 4 y stack de la Clase 5.
 
 Referencias externas comparables:
 - **LangChain `open_deep_research`** — https://github.com/langchain-ai/open_deep_research

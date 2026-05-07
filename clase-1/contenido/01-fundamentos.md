@@ -190,7 +190,7 @@ Cosas que los LLMs **siguen haciendo mal** y que el dev debe tener presentes al 
 - **Microsoft Phi-4 / Phi-4 mini** — small models eficientes.
 - **01.AI Yi**, **Baichuan**, **Zhipu GLM** — familia china open.
 
-**Leaderboards vivos para abrir en clase:**
+**Leaderboards vivos para consultar:**
 - LMArena — https://lmarena.ai/
 - Artificial Analysis — https://artificialanalysis.ai/
 - HF Open LLM Leaderboard — https://huggingface.co/open-llm-leaderboard
@@ -241,7 +241,7 @@ El insight: **mejoras calidad sin reentrenar, gastando más cómputo en inferenc
 - **LMArena / Chatbot Arena:** rankings por votos humanos blind. "Verdad de mercado".
 - **Artificial Analysis:** agregador de benchmarks, precio, latencia, throughput.
 
-### 7.4 Qué recordar en clase
+### 7.4 Qué recordar
 - Los clásicos están saturados; ranquear por ahí es ingenuo.
 - **Contaminación de datos:** benchmarks públicos filtran al training data. Confía más en benchmarks recientes o privados.
 - Para elegir modelo, **cruza**: capacidad (GPQA/SWE-bench) + preferencia humana (LMArena) + coste/latencia (Artificial Analysis) + **tu propio eval sobre tu tarea**.
@@ -379,12 +379,14 @@ Estándar en frontier desde 2024. Claude 3+, GPT-4V/4o+, Gemini, Llama 3.2+ Visi
 
 ---
 
-## Checklist de verificación previa a la clase
+## Datos volátiles a verificar
 
-- [ ] Confirmar nombres y fechas exactas de Claude 4.7 / 4.6 / 4.5 en https://docs.anthropic.com/en/release-notes/overview
-- [ ] Confirmar GPT-5 y variantes o-series en https://platform.openai.com/docs/models
-- [ ] Confirmar Gemini 3 en https://ai.google.dev/gemini-api/docs/models
-- [ ] Confirmar variantes de Llama 4 disponibles
-- [ ] Revisar LMArena top-10 del día de la clase (slide "estado del arte vivo")
-- [ ] Revisar Artificial Analysis para cifras de precio/latencia actualizadas
-- [ ] Confirmar ganador actual de ARC-AGI-2 y HLE
+Los nombres, fechas y rankings de modelos cambian cada 6-8 semanas. Si trabajas con este material meses después, revisa estas fuentes oficiales:
+
+- Claude (Anthropic): https://docs.anthropic.com/en/release-notes/overview
+- GPT y o-series (OpenAI): https://platform.openai.com/docs/models
+- Gemini (Google): https://ai.google.dev/gemini-api/docs/models
+- Llama (Meta): variantes disponibles en https://ai.meta.com/llama/
+- Ranking top-10 actual: https://lmarena.ai
+- Pricing y latencia comparada: https://artificialanalysis.ai
+- Estado de ARC-AGI-2 y HLE: https://arcprize.org

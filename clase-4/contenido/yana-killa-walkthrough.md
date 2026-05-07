@@ -1,6 +1,6 @@
 # Caso de estudio · Yana Killa Hidrogeología
 
-> Guía de revisión para Clase 4. Pensada para usarse en una ventana mientras la otra tiene abierto `~/Projects/deepskill/yana-killa-demo/`.
+> Caso de estudio principal de Clase 4. Léelo con el repo `yana-killa-demo` abierto al lado para localizar cada pieza en su archivo.
 
 ---
 
@@ -16,7 +16,7 @@ Cada consulta toma 30–90 minutos de búsqueda manual. Multiplicado por 10–15
 
 **Lo que muestra la app**: las mismas consultas respondidas en < 30 s, con cita por página clicable que abre el PDF en el párrafo exacto.
 
-### Por qué nos sirve para Clase 4
+### Por qué es buen caso de estudio
 
 No es un toy project. Tiene todas las decisiones que aparecen al construir una aplicación LLM real:
 
@@ -88,7 +88,7 @@ No es un toy project. Tiene todas las decisiones que aparecen al construir una a
 | Selección por env var | `.env.example`, `api/app/config.py` | `LLM_MODEL=claude-sonnet-4-6` vs `ollama/llama-3.3-70b` — mismo código, distinto provider. |
 | Lista dinámica para UI | `api/app/routes/llm.py`, `web/src/lib/llm-store.ts` | `GET /api/llm/models` lee `LLM_MODELS` (CSV) y deja al usuario cambiar por sesión. |
 
-**Pregunta para clase**: ¿Qué pasaría si quitamos LiteLLM y usamos el SDK oficial de Anthropic? — el `chat.py` se contamina con detalles de un proveedor; el día que el cliente exige Azure, hay que reescribir.
+**Pregunta para reflexionar**: ¿Qué pasaría si quitamos LiteLLM y usamos el SDK oficial de Anthropic? — el `chat.py` se contamina con detalles de un proveedor; el día que el cliente exige Azure, hay que reescribir.
 
 ### B. Streaming SSE con tres eventos
 
@@ -110,7 +110,7 @@ Cliente equivalente: **`web/src/lib/api.ts:69-108`** — parser de SSE manual so
 | Parser que sobrevive | `llm/citations.py:19-33` | Busca \`\`\`json...\`\`\` con regex; si no, busca el primer `{`. Resiste el caso "claro, aquí tienes:\n```json\n{...}\n```". |
 | Manejo del fallo del parser | `routes/chat.py:72-73` | Si el parser explota, se devuelve el texto crudo + `error: parse_failed`. La UI **no se rompe**. |
 
-**Pregunta para clase**: ¿Por qué no usar `response_format=json_object` u OpenAI structured outputs? — porque ata al proveedor. El parser tolerante es el precio del agnosticismo.
+**Pregunta para reflexionar**: ¿Por qué no usar `response_format=json_object` u OpenAI structured outputs? — porque ata al proveedor. El parser tolerante es el precio del agnosticismo.
 
 ### D. Citas verificables (anti-alucinación)
 
@@ -122,7 +122,7 @@ Cliente equivalente: **`web/src/lib/api.ts:69-108`** — parser de SSE manual so
 
 Esto es **prompt engineering + arquitectura combinados**: el prompt obliga el formato, pero el server **valida** que las citas existan. No se confía en el LLM.
 
-### E. Búsqueda híbrida (recap de Clase 3 aplicado)
+### E. Búsqueda híbrida (recap de clase 3 aplicado)
 
 `rag/retriever.py` en 95 líneas:
 
@@ -130,7 +130,7 @@ Esto es **prompt engineering + arquitectura combinados**: el prompt obliga el fo
 - **Vector** vía `sqlite-vec` con BGE-M3 (1024 dim, multilingüe).
 - **RRF** (Reciprocal Rank Fusion, k=60) une ambos rankings sin tunear pesos.
 
-Lo importante para Clase 4: este módulo es **reemplazable**. El `chat.py` solo conoce la firma `hybrid_search(conn, embedder, query, top_k)` → mañana podrías meter Pinecone y nada más cambia.
+Lo importante: este módulo es **reemplazable**. El `chat.py` solo conoce la firma `hybrid_search(conn, embedder, query, top_k)` → mañana podrías meter Pinecone y nada más cambia.
 
 ### F. El "borde" de producción
 
@@ -143,7 +143,7 @@ Lo importante para Clase 4: este módulo es **reemplazable**. El `chat.py` solo 
 
 ### G. Modos de fallo explícitos
 
-Esto es lo más raro de ver en un repo y por eso vale la pena enseñarlo.
+Esto es lo más raro de ver en un repo y por eso vale la pena estudiarlo.
 
 | Plan | Qué falla | Qué se hace |
 |---|---|---|
@@ -155,22 +155,22 @@ Esto es lo más raro de ver en un repo y por eso vale la pena enseñarlo.
 
 ---
 
-## 4 · Recorrido sugerido (orden de archivos en clase)
+## 4 · Recorrido sugerido (orden de archivos)
 
-Si proyectas el repo en orden de "afuera hacia adentro":
+Para recorrer el repo de "afuera hacia adentro":
 
-1. `README.md` — qué resuelve, las 5 vistas, stack. **5 min**.
-2. `DEMO.md` — los 6 beats. Si tienes el sistema corriendo, ejecuta los 3 primeros en vivo. **10 min**.
-3. `api/app/main.py` — el ensamblado: routers, lifespan, CORS, login. **3 min**.
-4. `api/app/routes/chat.py` — **la pieza central**. 76 líneas que contienen el patrón completo de una app LLM. **10 min**.
-5. `api/app/llm/prompts.py` — system prompt + builder. Discutir cada regla. **5 min**.
-6. `api/app/llm/adapter.py` — 35 líneas, abstracción total del proveedor. **3 min**.
-7. `api/app/llm/citations.py` — parser tolerante. Por qué un `json.loads` directo se rompe en producción. **3 min**.
-8. `api/app/rag/retriever.py` — solo si quedó tiempo o querés cerrar el loop con Clase 3. **5 min**.
-9. `web/src/lib/api.ts:69-108` — cómo se consume el SSE en el cliente. **5 min**.
-10. `auth.py` + `rate_limit.py` — el borde de producción. **3 min**.
+1. `README.md` — qué resuelve, las 5 vistas, stack.
+2. `DEMO.md` — los 6 beats. Si tienes el sistema corriendo, ejecuta los 3 primeros en vivo.
+3. `api/app/main.py` — el ensamblado: routers, lifespan, CORS, login.
+4. `api/app/routes/chat.py` — **la pieza central**. 76 líneas que contienen el patrón completo de una app LLM.
+5. `api/app/llm/prompts.py` — system prompt + builder. Revisar cada regla.
+6. `api/app/llm/adapter.py` — 35 líneas, abstracción total del proveedor.
+7. `api/app/llm/citations.py` — parser tolerante. Por qué un `json.loads` directo se rompe en producción.
+8. `api/app/rag/retriever.py` — para cerrar el loop con clase 3.
+9. `web/src/lib/api.ts:69-108` — cómo se consume el SSE en el cliente.
+10. `auth.py` + `rate_limit.py` — el borde de producción.
 
-**Total**: ~50 min de walkthrough. Deja espacio para preguntas y para abrir el navegador en `/chat` y `/buscar`.
+Después del recorrido, abre el navegador en `/chat` y `/buscar` para ver el resultado en vivo.
 
 ---
 
@@ -215,4 +215,4 @@ yana-killa-demo/
         └── pdf-viewer.tsx          ← react-pdf con lazy load
 ```
 
-★ = los 5 archivos que justifican abrir el repo en clase.
+★ = los 5 archivos clave para entender el patrón completo de la app LLM.
