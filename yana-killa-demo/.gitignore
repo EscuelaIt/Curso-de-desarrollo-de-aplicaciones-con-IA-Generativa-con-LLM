@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+.vite/
+.output/
+.nitro/
+.tanstack/
+
+# Env / data
+.env
+.env.local
+data/raw/*
+data/markdown/*
+!data/raw/.gitkeep
+!data/markdown/.gitkeep
+data/index.sqlite*
+data/models/
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Infra (secrets, key pairs, recursos generados)
+infra/config.env
+infra/*.pem
+infra/prod-resources.txt
+certs/

@@ -18,7 +18,7 @@ This repository contains course materials for "Arquitectura de Aplicaciones con 
 
 - `/Users/manduinca/Projects/deepskill/educa-AI-Platforms` — Reference project (EdTech platform with LLM orchestration, multi-turn chat, streaming, exports, rate limiting). Concepts from this project inform the practical sessions of the course.
 - `/Users/manduinca/Projects/deepskill/peru-elecciones` — Reference project (Go + DeepSeek vía OpenAI-compatible API, SQLite context injection, no RAG). Demo gancho de Clase 1 y fuente de ejemplos mínimos de cliente LLM agnóstico.
-- `/Users/manduinca/Projects/deepskill/antapaccay-demo` — Reference project (FastAPI + TanStack Start, RAG híbrido BM25+vector, LiteLLM, SSE, citas verificables). Case study principal de Clase 4. **En materiales del curso se anonimiza como `yana-killa-demo`** (ver § Anonimización).
+- `yana-killa-demo/` (en este repo) — Reference project (FastAPI + TanStack Start, RAG híbrido BM25+vector, LiteLLM, SSE, citas verificables). Case study principal de Clase 4 y stack base de Clase 5. Versión anonimizada del proyecto comercial original — ver § Anonimización para reglas si lo modificas.
 
 ## Language
 
